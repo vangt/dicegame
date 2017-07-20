@@ -57,7 +57,8 @@ function getFightMenu(character, monster){
 				run = rollD10();
 				runChance = getRunCheck(run);
 				if(runChance === 0){
-					return char;
+					mob.hp = 0;
+					getFighetMenu(char, mob);
 				}
 				else{
 					mobATT = getAttack(mob, char);
@@ -366,7 +367,7 @@ function runGame(chosenChar){
 	while(true){
 
 		if(character.hp === 0){
-			alert("You died! NO HP! OMG!")
+			alert("You died! NO HP! OMG! GAMEOVER!")
 			return false;
 		}
 		else{
@@ -391,7 +392,7 @@ function runGame(chosenChar){
 
 		if(runIntoChance === monster){
 			currentCharacter = getFightMenu(character, monster);
-			character = currentCharacter;
+			return currentCharacter;
 		}
 	}
 }
