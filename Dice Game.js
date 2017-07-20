@@ -108,9 +108,9 @@ function getMage(){
 	 att: 10,
 	 mag: 50,
 	 def: 25,
-	 mdef: 75;
+	 mdef: 75,
 	 inventory: {
-	 	potions: 0,
+	 	potions: 0
 	 }
 	}
 	return mage;
@@ -125,7 +125,7 @@ function getFighter(){
 	def: 75,
 	mdef: 25,
 	inventory: {
-		potion: 0;
+		potion: 0
 	}
 	}
 	return fighter;
