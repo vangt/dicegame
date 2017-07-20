@@ -13,30 +13,66 @@ function chooseCharacter(character){
 	}
 }
 
-function getFightMenu(character){
-	var userChoice = prompt("Enter 1: ATTACK" + "<br>" + "Enter 2: USE ITEM" + "<br>" + "Enter 3: RUN")
+function getFightMenu(character, monster){
+	var userChoice;
+	var charATT;
+	var mobATT;
 	var char = character;
+	var mob = monster;
+	var run;
+	var runChance;
+
+	if(char.hp === 0){
+		alert("You have been beaten!")
+		return false;
+	}
+	else if(mob.hp === 0){
+		alert("The monster has been slain!");
+		return char;
+	}
+	else{
+
+	userChoice = prompt("Enter 1: ATTACK" + "<br>" + "Enter 2: USE ITEM" + "<br>" + "Enter 3: RUN");
 
 	switch(userChoice){
 
-		case "1":
-			userChoice = getAttack(character);
-			break;
+			case "1":
+				charATT = getAttack(char, mob);
+				mob = charATT;
+				if(mob.hp === 0){
+					return true;
+				}
+				mobATT = getAttack(mob, char);
+				char = mobATT;
+				if(char.hp === 0){
+					return false;
+				}
+				getFighetMenu(char, mob);
 
-		case "2":
-			userChoice = getUseItems(character);
-			break;
+			case "2":
+				userChoice = getUseItem(char);
+				getFightMenu(char, mob);	
 
-		case "3":
-			userChoice = rollD10();
-			userChoice = getRunCheck(userChoice);
-			break;
+			case "3":
+				run = rollD10();
+				runChance = getRunCheck(run);
+				if(runChance === 0){
+					return char;
+				}
+				else{
+					mobATT = getAttack(mob, char);
+					char = mobATT;
+					if(char.hp === 0){
+						return false;
+					}
+					getFighetMenu(char, mob);
+				}
 
-		default:
-			alert("You did not choose a correct number.  Please choose again.");
-			getFighetMenu();
-			break;
-	}
+			default:
+				alert("You did not choose a correct number.  Please choose again.");
+				getFighetMenu(char, mob);
+				break;
+		}
 }
 
 function getUseItem(character){
@@ -47,8 +83,10 @@ function getUseItem(character){
 			char.hp + 25
 				if(char.hp > 100){
 					char.hp = 100;
+					alert("You're full hp!")
 					return char;
 				}
+				alert("You've healed 25 hp.")
 			return char;
 		}
 		else{
@@ -61,8 +99,6 @@ function getUseItem(character){
 		return char;
 	}
 }
-
-
 
 function getMage(){
 	var mage = {
@@ -96,13 +132,17 @@ function getFighter(){
 
 // need to input more potion
 function getPotion(bossesKilled){
-	var item = ["potion"]
+	var item = {
+		potion: 1
+	}
 	return item;
 }
 
 // Need to input more gear
 function getGear(bossesKilled){
-	var item = ["potion"]
+	var item = {
+		potion: 1
+	}
 	return item;
 }
 
@@ -196,11 +236,14 @@ function getRunCheck(userRoll){
 	var monsterSpeed = rollD6();
 
 	if(rollNumber > monsterSpeed);{
-		rollNum = deleteCurrentMob();
 		rollNum = alert("You were ran faster than the monster and got away.");
+		rollNumber = 0;
+		return rollNumber;	
 	}
 	else{
 		rollNum = alert("To slow.")
+		rollNumber = 1;
+		return rollNumber;
 	}
 }
 
@@ -278,10 +321,28 @@ function getMonster(bossCount){
 	}
 }
 
-function getAttack(){
-	var attack;
-	attack = rollD12();
-	return attack;
+function getAttack(character, monster){
+	var attackChance;
+	var char = character;
+	var mob = monster;
+	var damage;
+
+	alert("Press OK to roll your attack rating.");
+	attackChance = rollD12();
+	alert("You rolled " + attack);
+
+	if(attackChance > 4){
+		damage = char.att - mob.def;
+		alert("You did " + damage);
+
+		mob.hp -= damage;
+	
+		return mob;
+	}
+	else{
+		alert("You missed!");
+		return mob;
+	}
 }
 
 function getLucky(){
@@ -292,12 +353,14 @@ function getLucky(){
 
 function runGame(chosenChar){
 	var character;
+	var currentCharacter;
 	var rollNu;
 	var moveCount;
 	var moveDistance;
 	var runIntoChance;
 	var monster;
 	character = chosenChar;
+
 	document.write("Your stats are as follows:<br>" + "HP :" + character[0] + "<br>" + "MP :" + character[1] + "<br>" + "Attack: " + character[2] + "<br>" + "Magic Attack: " + character[3] + "<br>" + "Defense: " + character[4] + "<br>" + "Magic Defense: " + character[5]);
 
 	while(true){
@@ -314,13 +377,22 @@ function runGame(chosenChar){
 		}
 
 		if(moveCount % moveDistance === 0){
-			runIntoChance = getItemMonster();
+			runIntoChance = getItemMonster(0);
+			if(runIntoChance === potion){
+				character.inventory.potion += runIntoChance;
+			}
+			else{
+				monster = runIntoChance;
+			}
 		}
 		else{
 			return true;
 		}
 
-		if(runIntoChance === )
+		if(runIntoChance === monster){
+			currentCharacter = getFightMenu(character, monster);
+			character = currentCharacter;
+		}
 	}
 }
 
