@@ -13,21 +13,22 @@ function chooseCharacter(character){
 	}
 }
 
-function getFightMenu(){
+function getFightMenu(character){
 	var userChoice = prompt("Enter 1: ATTACK" + "<br>" + "Enter 2: USE ITEM" + "<br>" + "Enter 3: RUN")
+	var char = character;
 
 	switch(userChoice){
 
 		case "1":
-			userChoice = getAttack();
+			userChoice = getAttack(character);
 			break;
 
 		case "2":
-			userChoice = getUseItems();
+			userChoice = getUseItems(character);
 			break;
 
 		case "3":
-			userChoice = getRunChance();
+			userChoice = rollD10();
 			userChoice = getRunCheck(userChoice);
 			break;
 
@@ -38,6 +39,10 @@ function getFightMenu(){
 	}
 }
 
+function getUseItem(character){
+	
+}
+
 function getMage(){
 	var mage = {
 	 hp: 75,
@@ -45,7 +50,8 @@ function getMage(){
 	 att: 10,
 	 mag: 50,
 	 def: 25,
-	 mdef: 75
+	 mdef: 75;
+	 inventory: {}
 	}
 	return mage;
 }
@@ -57,7 +63,8 @@ function getFighter(){
 	att: 75,
 	mag: 25,
 	def: 75,
-	mdef: 25
+	mdef: 25,
+	inventory: {}
 	}
 	return fighter;
 }
@@ -276,7 +283,7 @@ function runGame(chosenChar){
 		}
 		else{
 			alert("Press to roll for your move distance.");
-			moveDistance = getMoveCount();
+			moveDistance = rollD4();
 			alert("You moved " + moveCount;)
 			moveCount += moveDistance;
 		}
