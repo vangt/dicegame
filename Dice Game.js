@@ -40,31 +40,56 @@ function getFightMenu(character){
 }
 
 function getUseItem(character){
+	var char = character;
 	
+	if(char.hp > 1 && char.hp < 100){
+		if(char.inventory.potion > 0){
+			char.hp + 25
+				if(char.hp > 100){
+					char.hp = 100;
+					return char;
+				}
+			return char;
+		}
+		else{
+			alert("You have no potions.");
+			return char;
+		}
+	}
+	else{
+		alert("You are full HP!")
+		return char;
+	}
 }
+
+
 
 function getMage(){
 	var mage = {
-	 hp: 75,
+	 hp: 100,
 	 mp: 150,
 	 att: 10,
 	 mag: 50,
 	 def: 25,
 	 mdef: 75;
-	 inventory: {}
+	 inventory: {
+	 	potions: 0,
+	 }
 	}
 	return mage;
 }
 
 function getFighter(){
 	var fighter = {
-	hp: 150,
+	hp: 100,
 	mp: 50,
 	att: 75,
 	mag: 25,
 	def: 75,
 	mdef: 25,
-	inventory: {}
+	inventory: {
+		potion: 0;
+	}
 	}
 	return fighter;
 }
