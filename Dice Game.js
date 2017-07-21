@@ -28,6 +28,7 @@ function getFightMenu(character, monster){
 	else{
 		getAttackSwitch(char, mob);
 	}
+	return char;
 }
 
 function getAttackSwitch(character, monster){
@@ -46,7 +47,9 @@ function getAttackSwitch(character, monster){
 			case "1":
 				charATT = getAttack(char, mob);
 				mobATT = getMobAttack(mob, char);
-				getFightMenu(mobATT, charATT);
+				char = mobATT;
+				mob = charATT
+				getFightMenu(char, mob);
 				break;
 
 			case "2":
@@ -398,6 +401,8 @@ function runGame(chosenChar){
 	document.write("Your stats are as follows:<br>" + "HP :" + character.hp + "<br>" + "MP :" + character.mp + "<br>" + "Attack: " + character.att + "<br>" + "Magic Attack: " + character.mag + "<br>" + "Defense: " + character.def + "<br>" + "Magic Defense: " + character.mdef + "<br>");
 
 	while(true){
+		monster = {};
+		runIntoChance = {}
 
 		if(character.hp <= 0){
 			alert("You died! NO HP! OMG! GAMEOVER!")
@@ -423,7 +428,6 @@ function runGame(chosenChar){
 		if(runIntoChance === monster){
 			currentCharacter = getFightMenu(character, monster);
 			character = currentCharacter;
-			return true;
 		}
 
 	}
