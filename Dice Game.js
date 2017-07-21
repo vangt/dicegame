@@ -19,14 +19,14 @@ function getFightMenu(character, monster){
 
 	if(char.hp <= 0){
 		alert("You have been beaten!")
-		return false;
+		return char;
 	}
 	else if(mob.hp <= 0){
 		alert("The monster has been slain!");
 		return char;
 	}
 	else{
-		getAttackSwitch(char, mob);
+		char = getAttackSwitch(char, mob);
 	}
 	return char;
 }
@@ -47,23 +47,23 @@ function getAttackSwitch(character, monster){
 			case "1":
 				mobHPLeft = getAttack(char, mob);
 				charHPLeft = getMobAttack(mob, char);
-				getFightMenu(charHPLeft, mobHPLeft);
-				break;
+				char = getFightMenu(charHPLeft, mobHPLeft);
+				return char;
 
 			case "2":
 				charHPLeft = getUseItem(char);
-				getFightMenu(charHPLeft, mob);
-				break;
+				char = getFightMenu(charHPLeft, mob);
+				return char;
 
 			case "3":
 				run = rollD10();
-				getRunCheck(run, char, mob);
-				break;
+				char = getRunCheck(run, char, mob);
+				return char;
 
 			default:
 				alert("You did not choose a correct number.  Please choose again.");
-				getAttackSwitch(char, mob);
-				break;
+				char = getAttackSwitch(char, mob);
+				return char;
 		}
 	}
 
@@ -71,8 +71,9 @@ function getUseItem(character){
 	var char = character;
 	
 	if(char.hp > 1 && char.hp < 100){
-		if(char.inventory.potion > 0){
+		if(char.inventory > 0){
 			char.hp + 25
+			char.inventory.pop();
 				if(char.hp > 100){
 					char.hp = 100;
 					alert("You're full hp!")
@@ -94,30 +95,26 @@ function getUseItem(character){
 
 function getMage(){
 	var mage = {
-	 hp: 100,
-	 mp: 150,
-	 att: 10,
-	 mag: 50,
-	 def: 25,
-	 mdef: 75,
-	 inventory: {
-	 	potions: 0
-	 }
-	}
+		hp: 150,
+		mp: 150,
+		att: 10,
+		mag: 50,
+		def: 15,
+		mdef: 75,
+		inventory: []
+	 	}
 	return mage;
 }
 
 function getFighter(){
 	var fighter = {
-	hp: 100,
+	hp: 250,
 	mp: 50,
 	att: 75,
 	mag: 25,
-	def: 75,
+	def: 20,
 	mdef: 25,
-	inventory: {
-		potion: 0
-	}
+	inventory: []
 	}
 	return fighter;
 }
@@ -125,7 +122,7 @@ function getFighter(){
 // need to input more potion
 function getPotion(bossesKilled){
 	var potion = {
-		potion: 1
+		name: "Heal Pot"
 	}
 	return potion;
 }
@@ -133,7 +130,7 @@ function getPotion(bossesKilled){
 // Need to input more gear
 function getGear(bossesKilled){
 	var potion = {
-		potion: 1
+		name: "Heal Pot"
 	}
 	return potion;
 }
@@ -141,9 +138,10 @@ function getGear(bossesKilled){
 
 function getRat(){
 	var rat = {
+		name: "rat",
 		hp: 25,
 		mp: 0,
-		att: 15,
+		att: 25,
 		mag: 0,
 		def: 5,
 		mdef: 5
@@ -153,6 +151,7 @@ function getRat(){
 
 function getCobra(){
 	var cobra = {
+		name: "cobra",
 		hp: 50,
 		mp: 50,
 		att: 10,
@@ -165,24 +164,26 @@ function getCobra(){
 
 function getTiger(){
 	var tiger = {
-	hp: 200,
-	mp: 200,
-	att: 100,
-	mag: 75,
-	def: 100,
-	mdef: 75
+		name: "tiger",
+		hp: 200,
+		mp: 200,
+		att: 100,
+		mag: 75,
+		def: 100,
+		mdef: 75
 	}
 	return tiger;
 }
 
 function getDragon(){
 	var dragon = {
-	hp: 500,
-	mp: 500,
-	att: 150,
-	mag: 150,
-	def: 150,
-	mdef: 150
+		name: "dragon",
+		hp: 500,
+		mp: 500,
+		att: 150,
+		mag: 150,
+		def: 150,
+		mdef: 150
 	}
 	return dragon;
 }
@@ -236,17 +237,19 @@ function getRunCheck(userRoll, character, monster){
 	if(rollNumber > monsterSpeed){
 		alert("You were ran faster than the monster and got away.");
 		mob.hp = 0;
-		getFightMenu(char, mob);
+		char = getFightMenu(char, mob);
+		return char;
 	}
 	else{
 		alert("What are you? A turtle?");
 		charHPLeft = getMobAttack(mob, char);
-		getFightMenu(charHPLeft, mob);
+		char = getFightMenu(charHPLeft, mob);
+		return char;
 	}
 }
 
 function getItemMonster(bossCount){
-	var itemOrMonster;
+	var itemOrMonster = {};
 	var bossKillCount = bossCount;
 	itemOrMonster = rollD10();
 	if(itemOrMonster < 5){
@@ -268,13 +271,13 @@ function getItem(bossCount){
 	if(killCount < 1){
 		if(grade > 8){
 			alert("You found a potion.")
-			console.log("You found a potion.<br>")
+			console.log("You found a potion.")
 			potion = getPotion();
 			return potion;
 		}
 		else if(grade <= 8){
 			alert("You found some gear.")
-			console.log("You found a potion.<br>")
+			console.log("You found a potion.")
 			potion = getGear();
 			return potion;
 		}
@@ -283,6 +286,7 @@ function getItem(bossCount){
 
 function getTierTwoMonsters(chance){
 	var rollChance = chance;
+	var monster = {};
 
 	if(chances < 5){
 			monster = getRat();
@@ -300,6 +304,7 @@ function getTierTwoMonsters(chance){
 
 function getTierThreeMonsters(chance){
 	var chances = chance;
+	var monster = {};
 
 	if(chances < 5){
 		monster = getRat();
@@ -322,8 +327,8 @@ function getTierThreeMonsters(chance){
 }
 
 function getMonster(bossCount){
-	var monster;
-	var chances;
+	var monster = {};
+	var chances = {};
 	var bossesKilled = bossCount;
 	
 	if(bossesKilled < 1){
@@ -346,9 +351,11 @@ function getMonster(bossCount){
 
 function getAttack(character, monster){
 	var attackChance;
-	var char = character;
-	var mob = monster;
+	var char = {};
+	var mob = {};
 	var damage = 0;
+	char = character;
+	mob = monster;
 
 	alert("Press OK to roll the D12 your attack rating.");
 	attackChance = rollD12();
@@ -370,16 +377,18 @@ function getAttack(character, monster){
 	}
 	else{
 		alert("You missed!");
-		console.log("You missed!<br>")
+		console.log("You missed!")
 		return mob;
 	}
 }
 
 function getMobAttack(monster, character){
 	var dodgeChance;
-	var mob = monster;
-	var char = character;
+	var mob = {};
+	var char = {};
 	var damage = 0;
+	mob = monster;
+	char = character;
 
 	alert("Press OK to roll the D20 for your chance to dodge the attack.")
 	dodgeChance = rollD20();
@@ -402,55 +411,58 @@ function getMobAttack(monster, character){
 	}
 }
 
-function countMoveSteps(count){
-	var moveCount
+function countMoveSteps(){
+	var moveDistance
 
 	alert("Press to roll the D4 for your move distance.");
 	moveDistance = rollD4();
 	alert("You moved " + moveDistance);
-	console.log(moveCount);
-	moveCount += moveDistance;
-	return moveCount;
+	console.log(moveDistance);
+	return moveDistance;
 }
 
 function runGame(chosenChar){
-	var character;
-	var currentCharacter;
+	var character = {};
+	var currentCharacter = {};
 	var rollNum;
 	var moveCount = 0;
-	var moveDistance = 0;
+	var moveDistance;
 	var runIntoChance;
-	var monster;
 	var potion = {
-		potion: 1
+		name: "Heal Pot"
 	}
+
 	character = chosenChar;
 
-	console.log("Your stats are as follows:<br>" + "HP :" + character.hp + "<br>" + "MP :" + character.mp + "<br>" + "Attack: " + character.att + "<br>" + "Magic Attack: " + character.mag + "<br>" + "Defense: " + character.def + "<br>" + "Magic Defense: " + character.mdef + "<br>");
+	console.log("Your stats are as follows:" + "HP:" + character.hp + ", " + "MP:" + character.mp + ", " + "Attack: " + character.att + ", " + "Magic Attack: " + character.mag + ", " + "Defense: " + character.def + ", " + "Magic Defense: " + character.mdef);
 
 	while(true){
-		monster = {};
+		runIntoChance = {};
 
 		if(character.hp <= 0){
 			alert("You died! NO HP! OMG! GAMEOVER!")
 			return false;
 		}
 		
-		moveCount = countMoveSteps(moveCount);
+		moveDistance = countMoveSteps();
+		moveCount += moveDistance;
 		
 		if(moveCount % moveDistance === 0){
-			runIntoChance = getItemMonster(0)
-		}
-
-		if(runIntoChance === potion){
-			character.inventory.potion += runIntoChance;
+			runIntoChance = getItemMonster(0);
 		}
 		else{
-			monster = runIntoChance;
+			runIntoChance = 0;
 		}
-		
-		if(runIntoChance === monster){
-			currentCharacter = getFightMenu(character, monster);
+
+		if(runIntoChance.name === potion.name){
+			character.inventory += runIntoChance;
+		}
+		else if(runIntoChance === 0){
+			alert("Didn't run into anything.");
+			console.log("Didn't run into anything.")
+		}
+		else{
+			currentCharacter = getFightMenu(character, runIntoChance);
 			character = currentCharacter;
 		}
 
@@ -465,12 +477,12 @@ function getIntroMenu(){
 	switch(choose){
 		case "mage":
 			choose = getMage();
-			console.log("You have chosen a mage!<br>");
+			console.log("You have chosen a mage!");
 			gameOn = runGame(choose);
 			break;
 		case "fighter":
 			choose = getFighter();
-			console.log("You have chosen a fighter!<br>");
+			console.log("You have chosen a fighter!");
 			gameOn = runGame(choose);
 			break;
 		case "quit":
