@@ -35,8 +35,8 @@ function getAttackSwitch(character, monster){
 	var char = character;
 	var mob = monster;
 	var userChoice = "";
-	var charATT;
-	var mobATT;
+	var mobHPLeft;
+	var charHPLeft;
 	var run;
 	var runChance;
 
@@ -45,21 +45,19 @@ function getAttackSwitch(character, monster){
 	switch(userChoice){
 
 			case "1":
-				charATT = getAttack(char, mob);
-				mobATT = getMobAttack(mob, char);
-				char = mobATT;
-				mob = charATT
-				getFightMenu(char, mob);
+				mobHPLeft = getAttack(char, mob);
+				charHPLeft = getMobAttack(mob, char);
+				getFightMenu(charHPLeft, mobHPLeft);
 				break;
 
 			case "2":
-				userChoice = getUseItem(char);
-				getFightMenu(char, mob);
+				charHPLeft = getUseItem(char);
+				getFightMenu(charHPLeft, mob);
 				break;
 
 			case "3":
 				run = rollD10();
-				runChance = getRunCheck(run, char, mob);
+				getRunCheck(run, char, mob);
 				break;
 
 			default:
@@ -230,7 +228,10 @@ function getRunCheck(userRoll, character, monster){
 	var char = character;
 	var mob = monster;
 	var monsterSpeed = rollD6();
-	var result;
+	var charHPLeft;
+
+	alert("You rolled " + rollNumber);
+	alert("The monster rolled " + monsterSpeed);
 
 	if(rollNumber > monsterSpeed){
 		alert("You were ran faster than the monster and got away.");
@@ -238,9 +239,9 @@ function getRunCheck(userRoll, character, monster){
 		getFightMenu(char, mob);
 	}
 	else{
-		alert("To slow.");
-		result = getMobAttack(mob, char);
-		getFightMenu(result, mob);
+		alert("What are you? A turtle?");
+		charHPLeft = getMobAttack(mob, char);
+		getFightMenu(charHPLeft, mob);
 	}
 }
 
@@ -355,7 +356,7 @@ function getAttack(character, monster){
 
 	if(attackChance > 4){
 		damage = char.att - mob.def;
-			if(damage >= 0){
+			if(damage >= 1){
 				alert("You did " + damage);
 
 				mob.hp -= damage;
@@ -390,11 +391,12 @@ function getMobAttack(monster, character){
 	}
 	else{
 		damage = mob.att - char.def;
-			if(damage >= 0){
+			if(damage >= 1){
 				char.hp -= damage;
 				return char;
 			}
 			else{
+				alert("The monster did no damage.")
 				return char;
 			}
 	}
