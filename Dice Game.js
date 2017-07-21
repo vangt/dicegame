@@ -402,6 +402,7 @@ function getMobAttack(monster, character){
 		damage = mob.att - char.def;
 			if(damage >= 1){
 				char.hp -= damage;
+				alert("The monster did " + damage);
 				return char;
 			}
 			else{
