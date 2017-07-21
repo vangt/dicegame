@@ -17,7 +17,14 @@ function getStatus(character){
 	var char = {};
 	char = character;
 
-	alert("HP: " + char.hp + "MP: " + char.mp + "ATT: " + char.att + "MAG: " + char.mag + "DEF: " + char.def + "MDEF: " + char.mdef);
+	alert("HP: " + char.hp + ", MP: " + char.mp + ", ATT: " + char.att + ", MAG: " + char.mag + ", DEF: " + char.def + ", MDEF: " + char.mdef);
+}
+
+function getInventoryCount(character){
+	var char = {};
+	char = character;
+
+	alert("You have this many potions: " + char.inventory.length);
 }
 
 function getFightMenu(character, monster){
@@ -25,11 +32,13 @@ function getFightMenu(character, monster){
 	var mob = monster;
 
 	if(char.hp <= 0){
-		alert("You have been beaten!")
+		alert("You have been beaten!");
+		return char;
+	}
+	else if(mob === 0){
 		return char;
 	}
 	else if(mob.hp <= 0){
-		alert("The monster has been slain!");
 		return char;
 	}
 	else{
@@ -47,7 +56,7 @@ function getAttackSwitch(character, monster){
 	var run;
 	var runChance;
 
-	userChoice = prompt("Enter 1: ATTACK" + "\n" + "Enter 2: USE ITEM" + "\n" + "Enter 3: RUN");
+	userChoice = prompt("Enter 1: ATTACK" + "\n" + "Enter 2: USE ITEM" + "\n" + "Enter 3: RUN" + "\n" + "Enter 4: Check your current status." + "\n" + "Enter 5: Check inventory.");
 
 	switch(userChoice){
 
@@ -63,12 +72,21 @@ function getAttackSwitch(character, monster){
 				return char;
 
 			case "3":
+				if(mob.name !== "dragon"){
+				alert("Roll the D10 to see if you get away.")
 				run = rollD10();
-				char = getRunCheck(run, char, mob);
+				char = getRunCheck(run, char, mob);}
+				alert("YOU CAN'T ESCAPE THE END!")
+				char = getFightMenu(char, mob);
 				return char;
 
-			case "Status":
+			case "4":
 				getStatus(char);
+				char = getFightMenu(char, mob);
+				return char;
+
+			case "5":
+				getInventoryCount(char);
 				char = getFightMenu(char, mob);
 				return char;
 
@@ -79,34 +97,61 @@ function getAttackSwitch(character, monster){
 		}
 	}
 
-function getUseItem(character){
-	var char = character;
+function getHealAmount(character, baseCharacter){
+	var char = {};
+	var base = {};
+	char = character;
+	base = baseCharacter;
+
+	char.hp += 25;
+	char.inventory.pop();
 	
-	if(char.hp > 1 && char.hp < 100){
-		if(char.inventory > 0){
-			char.hp + 25
-			char.inventory.pop();
-				if(char.hp > 100){
-					char.hp = 100;
-					alert("You're full hp!")
-					return char;
-				}
-				alert("You've healed 25 hp.")
-			return char;
+	if(char.hp > base.hp){
+		char.hp = base.hp;
+		alert("You're full hp!")
+		return char;
+	}
+	alert("You've healed 25 hp.")
+	return char;
+}
+
+function getUseItem(character){
+	var char = {};
+	var mage = getMage();
+	var fighter = getFighter();
+	char = character;
+
+	if(char.inventory.length > 0){
+		if(char.name === mage.name){
+			if(char.hp > 1 && char.hp < mage.hp){
+				char = getHealAmount(char, mage);
+				return char;
+			}
+			else{
+				alert("You are full HP!")
+				return char;
+			}
 		}
 		else{
-			alert("You have no potions.");
-			return char;
+			if(char.hp > 1 && char.hp < fighter.hp){
+				char = getHealAmount(char, fighter);
+				return char;
+			}
+			else{
+				alert("You are full HP!")
+				return char;
+			}
 		}
 	}
 	else{
-		alert("You are full HP!")
+		alert("You have no potions.")
 		return char;
 	}
 }
 
 function getMage(){
 	var mage = {
+		name: "mage",
 		hp: 150,
 		mp: 150,
 		att: 10,
@@ -120,14 +165,15 @@ function getMage(){
 
 function getFighter(){
 	var fighter = {
-	hp: 250,
-	mp: 50,
-	att: 75,
-	mag: 25,
-	def: 20,
-	mdef: 25,
-	inventory: []
-	}
+		name: "fighter",
+		hp: 250,
+		mp: 50,
+		att: 75,
+		mag: 25,
+		def: 20,
+		mdef: 25,
+		inventory: []
+		}
 	return fighter;
 }
 
@@ -147,6 +193,39 @@ function getGear(bossesKilled){
 	return potion;
 }
 
+function getBossStats(bossMob, multiplyer){
+	var boss = {};
+	var statsIncrease = multiplyer;
+	boss = bossMob;
+
+	boss.hp *= multiplyer;
+	boss.mp *= multiplyer;
+	boss.att *= multiplyer;
+	boss.mag *= multiplyer;
+	boss.def *= multiplyer;
+	boss.mdef *= multiplyer;
+
+	return boss;
+}
+
+function getBoosted(character){
+	var char = {};
+	var rollAmount = 0;
+	char = character;
+
+	alert("You've gained enough experience to get a boost!  Roll the D20 to see how much it goes up!");
+	rollAmount = rollD20();
+	alert("You rolled " + rollAmount + ".  Your stats have increase by that amount!");
+
+	char.hp += rollAmount;
+	char.mp += rollAmount;
+	char.att += rollAmount;
+	char.mag += rollAmount;
+	char.def += rollAmount;
+	char.mdef += rollAmount;
+
+	return char;
+}
 
 function getRat(){
 	var rat = {
@@ -179,10 +258,10 @@ function getTiger(){
 		name: "tiger",
 		hp: 200,
 		mp: 200,
-		att: 100,
-		mag: 75,
-		def: 100,
-		mdef: 75
+		att: 50,
+		mag: 50,
+		def: 25,
+		mdef: 25
 	}
 	return tiger;
 }
@@ -194,8 +273,8 @@ function getDragon(){
 		mp: 500,
 		att: 150,
 		mag: 150,
-		def: 150,
-		mdef: 150
+		def: 75,
+		mdef: 75
 	}
 	return dragon;
 }
@@ -248,7 +327,7 @@ function getRunCheck(userRoll, character, monster){
 
 	if(rollNumber > monsterSpeed){
 		alert("You were ran faster than the monster and got away.");
-		mob.hp = 0;
+		mob = 0;
 		char = getFightMenu(char, mob);
 		return char;
 	}
@@ -263,7 +342,10 @@ function getRunCheck(userRoll, character, monster){
 function getItemMonster(bossCount){
 	var itemOrMonster = {};
 	var bossKillCount = bossCount;
+	
 	itemOrMonster = rollD10();
+	alert("You rolled " + itemOrMonster);
+
 	if(itemOrMonster < 5){
 		itemOrMonster = getItem(bossKillCount);
 		return itemOrMonster;
@@ -278,29 +360,31 @@ function getItem(bossCount){
 	var potion;
 	var killCount = bossCount;
 	var grade;
+	
+	alert("Roll the D20 to see what Item you get!")
 	grade = rollD20();
+	alert("You rolled " + grade);
 
-	if(killCount < 1){
-		if(grade > 8){
-			alert("You found a potion.")
-			console.log("You found a potion.")
-			potion = getPotion();
-			return potion;
-		}
-		else if(grade <= 8){
-			alert("You found some gear.")
-			console.log("You found a potion.")
-			potion = getGear();
-			return potion;
-		}
+	if(grade > 8){
+		alert("You found a potion.")
+		console.log("You found a potion.")
+		potion = getPotion();
+		return potion;
 	}
+	else if(grade <= 8){
+		alert("You found some gear.")
+		console.log("You found a potion.")
+		potion = getGear();
+		return potion;
+	}
+
 }
 
 function getTierTwoMonsters(chance){
 	var rollChance = chance;
 	var monster = {};
 
-	if(chances < 5){
+	if(rollChance < 5){
 			monster = getRat();
 			alert("You've encountered a crazied rat.")
 			console.log("A crazied rat appeared.");
@@ -350,12 +434,16 @@ function getMonster(bossCount){
 		return monster;
 	}
 	else if (bossesKilled < 2){
+		alert("Roll a D6 to see what monster will appear.");
 		chances = rollD6();
+		alert("You rolled " + chances);
 		monster = getTierTwoMonsters(chances);
 		return monster;
 	}
 	else{
+		alert("Roll a D8 to see what monster will appear.");
 		chances = rollD8();
+		alert("You rolled " + chances);
 		monster = getTierThreeMonsters(chances);
 		return monster;
 	}
@@ -379,6 +467,9 @@ function getAttack(character, monster){
 				alert("You did " + damage);
 
 				mob.hp -= damage;
+					if(mob.hp <= 0){
+						alert("You have slain " + mob.name);
+					}
 	
 				return mob;
 			}
@@ -444,6 +535,8 @@ function runGame(chosenChar){
 	var potion = {
 		name: "Heal Pot"
 	}
+	var bossCounter = 0;
+	var boss;
 
 	character = chosenChar;
 
@@ -460,15 +553,43 @@ function runGame(chosenChar){
 		moveDistance = countMoveSteps();
 		moveCount += moveDistance;
 		
+		if(moveCount >= 15){
+			moveCount = 0;
+			bossCounter += 1;
+			character = getBoosted(character);
+			if(bossCounter >= 3){
+				boss = getDragon();
+				alert("THE END IS HERE!  THE DRAGON CAME!")
+				runIntoChance = boss;
+				currentCharacter = getFightMenu(character, runIntoChance);
+				if(currentCharacter.hp > 0){
+					alert("You have saved the world CHAMPION!");
+					return true;
+				}
+				else{
+					character = currentCharacter;
+				}
+			}
+			else{
+				boss = getMonster(bossCounter - 1);
+				alert("It was really a BOSS!!!")
+				boss = getBossStats(boss, bossCounter);
+				runIntoChance = boss;
+			}
+		}		
+		
 		if(moveCount % moveDistance === 0){
-			runIntoChance = getItemMonster(0);
+			if(moveCount !== 0){
+			alert("You've encountered something, roll the D10 to see what it is.")
+			runIntoChance = getItemMonster(bossCounter);
+			}
 		}
 		else{
 			runIntoChance = 0;
 		}
 
 		if(runIntoChance.name === potion.name){
-			character.inventory += runIntoChance;
+			character.inventory.push(runIntoChance);
 		}
 		else if(runIntoChance === 0){
 			alert("Didn't run into anything.");
@@ -478,9 +599,9 @@ function runGame(chosenChar){
 			currentCharacter = getFightMenu(character, runIntoChance);
 			character = currentCharacter;
 		}
-
 	}
 }
+
 
 function getIntroMenu(){
 	var choose = prompt("Choose a mage or fighter, or quit to cancel out.");
