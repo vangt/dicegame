@@ -280,51 +280,66 @@ function getItem(bossCount){
 	}
 }
 
+function getTierTwoMonsters(chance){
+	var rollChance = chance;
+
+	if(chances < 5){
+			monster = getRat();
+			alert("You've encountered a crazied rat.")
+			console.log("A crazied rat appeared.");
+			return monster;
+		}
+		else{
+			monster = getCobra();
+			alert("You've encountered a venomous cobra.")
+			console.log("A venomous cobra appeared.");
+			return monster;
+		}
+}
+
+function getTierThreeMonsters(chance){
+	var chances = chance;
+
+	if(chances < 5){
+		monster = getRat();
+		alert("You've encountered a crazied rat.")
+		console.log("A crazied rat appeared.");
+		return monster;
+	}
+	else if(chances <= 7 && chances >= 5){
+		monster = getCobra();
+		alert("You've encountered a venomous cobra.")
+		console.log("A venomous cobra appeared.");
+		return monster;
+	}
+	else{
+		monster = getTiger();
+		alert("You've encountered a man-eating tiger.")
+		console.log("A man-eating tiger appeared.");
+		return monster;
+	}
+}
+
 function getMonster(bossCount){
 	var monster;
 	var chances;
 	var bossesKilled = bossCount;
+	
 	if(bossesKilled < 1){
 		monster = getRat();
 		alert("You've encountered a crazied rat.")
 		console.log("A crazied rat appeared.");
 		return monster;
 	}
-	else if(bossesKilled < 2){
+	else if (bossesKilled < 2){
 		chances = rollD6();
-		if(chances < 5){
-			monster = getRat();
-			alert("You've encountered a crazied rat.")
-			console.log("A crazied rat appeared.");
-			return monster;
-		}
-		else{
-			monster = getCobra();
-			alert("You've encountered a venomous cobra.")
-			console.log("A venomous cobra appeared.");
-			return monster;
-		}
+		monster = getTierTwoMonsters(chances);
+		return monster;
 	}
 	else{
 		chances = rollD8();
-		if(chances < 5){
-			monster = getRat();
-			alert("You've encountered a crazied rat.")
-			console.log("A crazied rat appeared.");
-			return monster;
-		}
-		else if(chances <= 7 && chances >= 5){
-			monster = getCobra();
-			alert("You've encountered a venomous cobra.")
-			console.log("A venomous cobra appeared.");
-			return monster;
-		}
-		else{
-			monster = getTiger();
-			alert("You've encountered a man-eating tiger.")
-			console.log("A man-eating tiger appeared.");
-			return monster;
-		}
+		monster = getTierThreeMonsters(chances);
+		return monster;
 	}
 }
 
@@ -421,7 +436,6 @@ function runGame(chosenChar){
 		
 		moveCount = countMoveSteps(moveCount);
 		
-
 		if(moveCount % moveDistance === 0){
 			runIntoChance = getItemMonster(0)
 		}
@@ -432,7 +446,6 @@ function runGame(chosenChar){
 		else{
 			monster = runIntoChance;
 		}
-
 		
 		if(runIntoChance === monster){
 			currentCharacter = getFightMenu(character, monster);
