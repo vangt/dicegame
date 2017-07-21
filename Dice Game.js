@@ -13,6 +13,13 @@ function chooseCharacter(character){
 	}
 }
 
+function getStatus(character){
+	var char = {};
+	char = character;
+
+	alert("HP: " + char.hp + "MP: " + char.mp + "ATT: " + char.att + "MAG: " + char.mag + "DEF: " + char.def + "MDEF: " + char.mdef);
+}
+
 function getFightMenu(character, monster){
 	var char = character;
 	var mob = monster;
@@ -58,6 +65,11 @@ function getAttackSwitch(character, monster){
 			case "3":
 				run = rollD10();
 				char = getRunCheck(run, char, mob);
+				return char;
+
+			case "Status":
+				getStatus(char);
+				char = getFightMenu(char, mob);
 				return char;
 
 			default:
