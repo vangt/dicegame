@@ -267,13 +267,13 @@ function getItem(bossCount){
 	if(killCount < 1){
 		if(grade > 8){
 			alert("You found a potion.")
-			document.write("You found a potion.<br>")
+			console.log("You found a potion.<br>")
 			potion = getPotion();
 			return potion;
 		}
 		else if(grade <= 8){
 			alert("You found some gear.")
-			document.write("You found a potion.<br>")
+			console.log("You found a potion.<br>")
 			potion = getGear();
 			return potion;
 		}
@@ -287,7 +287,7 @@ function getMonster(bossCount){
 	if(bossesKilled < 1){
 		monster = getRat();
 		alert("You've encountered a crazied rat.")
-		document.write("A crazied rat appeared.");
+		console.log("A crazied rat appeared.");
 		return monster;
 	}
 	else if(bossesKilled < 2){
@@ -295,13 +295,13 @@ function getMonster(bossCount){
 		if(chances < 5){
 			monster = getRat();
 			alert("You've encountered a crazied rat.")
-			document.write("A crazied rat appeared.");
+			console.log("A crazied rat appeared.");
 			return monster;
 		}
 		else{
 			monster = getCobra();
 			alert("You've encountered a venomous cobra.")
-			document.write("A venomous cobra appeared.");
+			console.log("A venomous cobra appeared.");
 			return monster;
 		}
 	}
@@ -310,19 +310,19 @@ function getMonster(bossCount){
 		if(chances < 5){
 			monster = getRat();
 			alert("You've encountered a crazied rat.")
-			document.write("A crazied rat appeared.");
+			console.log("A crazied rat appeared.");
 			return monster;
 		}
 		else if(chances <= 7 && chances >= 5){
 			monster = getCobra();
 			alert("You've encountered a venomous cobra.")
-			document.write("A venomous cobra appeared.");
+			console.log("A venomous cobra appeared.");
 			return monster;
 		}
 		else{
 			monster = getTiger();
 			alert("You've encountered a man-eating tiger.")
-			document.write("A man-eating tiger appeared.");
+			console.log("A man-eating tiger appeared.");
 			return monster;
 		}
 	}
@@ -354,7 +354,7 @@ function getAttack(character, monster){
 	}
 	else{
 		alert("You missed!");
-		document.write("You missed!<br>")
+		console.log("You missed!<br>")
 		return mob;
 	}
 }
@@ -398,7 +398,7 @@ function runGame(chosenChar){
 	}
 	character = chosenChar;
 
-	document.write("Your stats are as follows:<br>" + "HP :" + character.hp + "<br>" + "MP :" + character.mp + "<br>" + "Attack: " + character.att + "<br>" + "Magic Attack: " + character.mag + "<br>" + "Defense: " + character.def + "<br>" + "Magic Defense: " + character.mdef + "<br>");
+	console.log("Your stats are as follows:<br>" + "HP :" + character.hp + "<br>" + "MP :" + character.mp + "<br>" + "Attack: " + character.att + "<br>" + "Magic Attack: " + character.mag + "<br>" + "Defense: " + character.def + "<br>" + "Magic Defense: " + character.mdef + "<br>");
 
 	while(true){
 		monster = {};
@@ -441,12 +441,12 @@ function getIntroMenu(){
 	switch(choose){
 		case "mage":
 			choose = getMage();
-			document.write("You have chosen a mage!<br>");
+			console.log("You have chosen a mage!<br>");
 			gameOn = runGame(choose);
 			break;
 		case "fighter":
 			choose = getFighter();
-			document.write("You have chosen a fighter!<br>");
+			console.log("You have chosen a fighter!<br>");
 			gameOn = runGame(choose);
 			break;
 		case "quit":
