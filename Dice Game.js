@@ -385,6 +385,17 @@ function getMobAttack(monster, character){
 	}
 }
 
+function countMoveSteps(count){
+	var moveCount
+
+	alert("Press to roll the D4 for your move distance.");
+	moveDistance = rollD4();
+	alert("You moved " + moveDistance);
+	console.log(moveCount);
+	moveCount += moveDistance;
+	return moveCount;
+}
+
 function runGame(chosenChar){
 	var character;
 	var currentCharacter;
@@ -402,28 +413,26 @@ function runGame(chosenChar){
 
 	while(true){
 		monster = {};
-		runIntoChance = {}
 
 		if(character.hp <= 0){
 			alert("You died! NO HP! OMG! GAMEOVER!")
 			return false;
 		}
 		
-		alert("Press to roll the D4 for your move distance.");
-		moveDistance = rollD4();
-		alert("You moved " + moveDistance);
-		moveCount += moveDistance;
+		moveCount = countMoveSteps(moveCount);
 		
 
 		if(moveCount % moveDistance === 0){
-			runIntoChance = getItemMonster(0);
-			if(runIntoChance === potion){
-				character.inventory.potion += runIntoChance;
-			}
-			else{
-				monster = runIntoChance;
-			}
+			runIntoChance = getItemMonster(0)
 		}
+
+		if(runIntoChance === potion){
+			character.inventory.potion += runIntoChance;
+		}
+		else{
+			monster = runIntoChance;
+		}
+
 		
 		if(runIntoChance === monster){
 			currentCharacter = getFightMenu(character, monster);
