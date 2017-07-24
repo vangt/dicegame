@@ -62,7 +62,10 @@ function getAttackSwitch(character, monster){
 
 			case "1":
 				mobHPLeft = getAttack(char, mob);
-				charHPLeft = getMobAttack(mob, char);
+				charHPLeft = char;
+				if(mobHPLeft.hp > 0){
+					charHPLeft = getMobAttack(mob, char);
+				}
 				char = getFightMenu(charHPLeft, mobHPLeft);
 				return char;
 
@@ -154,9 +157,9 @@ function getMage(){
 		name: "mage",
 		hp: 150,
 		mp: 150,
-		att: 10,
+		att: 25,
 		mag: 50,
-		def: 15,
+		def: 25,
 		mdef: 75,
 		inventory: []
 	 	}
@@ -271,10 +274,10 @@ function getDragon(){
 		name: "dragon",
 		hp: 500,
 		mp: 500,
-		att: 150,
-		mag: 150,
-		def: 75,
-		mdef: 75
+		att: 100,
+		mag: 100,
+		def: 50,
+		mdef: 50
 	}
 	return dragon;
 }
